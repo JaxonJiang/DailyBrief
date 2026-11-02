@@ -243,7 +243,18 @@ jobs:
           DISABLE_SOURCE_IDS: ${{ vars.DISABLE_SOURCE_IDS || 'linuxdo' }}
           WEB_MODE: 'true'
         run: npm run daily
+      # ===== Ningbo AI Morning Briefing =====
+      - name: Setup Python for morning briefing
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
+      - name: Generate Ningbo morning briefing and MP3
+        continue-on-error: true
+        run: |
+          python -m pip install requests feedparser chinesecalendar edge-tts
+          python scripts/add_morning.py
+      # ===== End morning briefing =====
       - name: Build static site (index + archive)
         run: npm run build-site
 
