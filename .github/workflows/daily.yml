@@ -257,6 +257,7 @@ jobs:
         run: npm run build-site
 
       - name: Publish to gh-pages
+      
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -264,3 +265,60 @@ jobs:
           publish_branch: gh-pages
           keep_files: false  # we restored everything above, so a clean publish is fine
           commit_message: 'daily: report for ${{ github.run_id }}'
+      - name: Notify iPhone via Bark
+        if: success()
+        continue-on-error: true
+        env:
+          BARK_KEY: ${{ secrets.BARK_KEY }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import json
+          import urllib.request
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          key = os.environ.get("BARK_KEY", "").strip()
+
+          if not key:
+              print("BARK_KEY missing, notification skipped")
+              raise SystemExit(0)
+
+          owner, repo = os.environ["GITHUB_REPOSITORY"].split("/")
+          date = datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d")
+
+          site_url = f"https://{owner.lower()}.github.io/{repo}/"
+          audio_file = f"daily_reports/{date}/briefing.mp3"
+
+          if os.path.isfile(audio_file):
+              body = f"{date} AI晨报已生成，点击查看并收听语音"
+          else:
+              body = f"{date} AI晨报已生成，点击查看文字日报"
+
+          payload = {
+              "device_key": key,
+              "title": "AI 每日智能晨报",
+              "body": body,
+              "url": site_url,
+              "group": "DailyBrief"
+          }
+
+          request = urllib.request.Request(
+              "https://api.day.app/push",
+              data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+              headers={
+                  "Content-Type": "application/json; charset=utf-8"
+              },
+              method="POST"
+          )
+
+          with urllib.request.urlopen(request, timeout=30) as response:
+              result = json.load(response)
+
+          if result.get("code") != 200:
+              raise RuntimeError(
+                  f"Bark notification failed: {result.get('message')}"
+              )
+
+          print("Bark notification sent successfully")
+          PY
