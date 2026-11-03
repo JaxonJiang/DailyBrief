@@ -33,11 +33,11 @@ name: Daily Brief
 on:
   schedule:
     # 北京时间每天早上 06:00 生成晨报
-    - cron: '00 6 * * *'
+    - cron: '7 6 * * *'
       timezone: 'Asia/Shanghai'
 
     # 08:30 作为漏跑补偿检查
-    - cron: '30 6 * * *'
+    - cron: '17 7 * * *'
       timezone: 'Asia/Shanghai'
 
   workflow_dispatch:
