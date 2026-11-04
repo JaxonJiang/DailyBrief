@@ -199,6 +199,9 @@ def make_script(report, weather, holiday, rate, news, knowledge):
             "这不是实时交易报价。"
         )
 
+    if report.get("_global_news"):
+        parts.append("接下来关注全球热点。")
+        parts.extend(item["title"] + "。" for item in report["_global_news"])
     if report.get("_national_news"):
         parts.append("接下来是全国焦点。")
         parts.extend(item["title"] + "。" for item in report["_national_news"])
@@ -277,6 +280,12 @@ def make_panel(weather, holiday, rate, news, knowledge, report, audio_ok):
     ) + "</ol>"
     if not report.get("_national_news"):
         national_html = "<p>全国热点暂不可用，请查看下方资讯。</p>"
+    global_html = "<ol>" + "".join(
+        f'<li><a href="{esc(item["url"])}" target="_blank" rel="noopener noreferrer">{esc(item["title"])}</a></li>'
+        for item in report.get("_global_news", [])
+    ) + "</ol>"
+    if not report.get("_global_news"):
+        global_html = "<p>全球热点暂不可用，请查看下方国际资讯。</p>"
     owner, repo = os.getenv(
         "GITHUB_REPOSITORY", "JaxonJiang/DailyBrief"
     ).split("/", 1)
@@ -296,7 +305,7 @@ def make_panel(weather, holiday, rate, news, knowledge, report, audio_ok):
 
     return f"""
 <section id="morning-v2" class="morning-v2">
-  <p class="morning-eyebrow">DAILY BRIEF · MORNING EDITION</p><h2>早安，宁波</h2><p>{esc(DATE)} · 全国焦点 / 城市动态 / 财经观察</p>
+  <p class="morning-eyebrow">DAILY BRIEF · MORNING EDITION</p><h2>早安，宁波</h2><p>{esc(DATE)} · 全球热点 / 全国焦点 / 宁波动态 / 财经观察</p>
   <div class="morning-grid">
     <article class="morning-card">
       <h3>🌤️ 宁波天气</h3>
@@ -305,6 +314,11 @@ def make_panel(weather, holiday, rate, news, knowledge, report, audio_ok):
       <small>来源：Open-Meteo 模型天气数据</small>
     </article>
 
+    <article class="morning-card">
+      <h3>全球热点</h3>
+      {global_html}
+      <small>近48小时国际新闻，点击查看来源。</small>
+    </article>
     <article class="morning-card">
       <h3>全国焦点</h3>{national_html}<h3>宁波本地热点</h3>
       {news_html}
@@ -398,6 +412,13 @@ def main():
 
     national = safe("national news", lambda: get_ningbo_news("中国 国内 要闻", 8)) or []
     report["_national_news"] = national
+    global_news = safe("global news", lambda: get_ningbo_news("国际 全球 新闻", 8)) or []
+    seen_titles = {item["title"] for item in news + national}
+    seen_urls = {item["url"] for item in news + national}
+    report["_global_news"] = [
+        item for item in global_news
+        if item["title"] not in seen_titles and item["url"] not in seen_urls
+    ]
     article_file = OUT / f"{DATE}-articles.json"
     articles = json.loads(article_file.read_text(encoding="utf-8")) if article_file.exists() else []
     if isinstance(articles, dict):
