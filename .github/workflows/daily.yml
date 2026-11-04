@@ -210,8 +210,12 @@ jobs:
 
       - name: Generate Ningbo morning briefing and MP3
         continue-on-error: true
+        env:
+          MORNING_VOICE: ${{ vars.MORNING_VOICE || 'zh-CN-YunxiNeural' }}
+          MORNING_RATE: ${{ vars.MORNING_RATE || '-5%' }}
+          REPORT_TZ: ${{ vars.REPORT_TZ || 'Asia/Shanghai' }}
         run: |
-          python -m pip install requests feedparser chinesecalendar edge-tts
+          python -m pip install requests feedparser edge-tts
           python scripts/add_morning.py
       # ===== End morning briefing =====
       - name: Build static site (index + archive)
