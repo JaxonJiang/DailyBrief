@@ -211,7 +211,7 @@ jobs:
       - name: Generate Ningbo morning briefing and MP3
         continue-on-error: true
         env:
-          MORNING_VOICE: ${{ vars.MORNING_VOICE || 'zh-CN-YunxiNeural' }}
+          MORNING_VOICE: ${{ vars.MORNING_VOICE || 'zh-CN-XiaoxiaoNeural' }}
           MORNING_RATE: ${{ vars.MORNING_RATE || '-5%' }}
           REPORT_TZ: ${{ vars.REPORT_TZ || 'Asia/Shanghai' }}
         run: |
