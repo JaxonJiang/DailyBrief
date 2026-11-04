@@ -221,7 +221,7 @@ def make_script(report, weather, holiday, rate, news, knowledge):
 async def save_mp3(text, destination):
     speech = edge_tts.Communicate(
         text,
-        voice=os.getenv("MORNING_VOICE", "zh-CN-YunxiNeural"),
+        voice=os.getenv("MORNING_VOICE", "zh-CN-XiaoxiaoNeural"),
         rate=os.getenv("MORNING_RATE", "-5%"),
     )
     await speech.save(str(destination))
