@@ -1,12 +1,37 @@
 早上好，今天是2026-11-04。欢迎收听AI每日智能晨报。
-宁波当前参考气温19.1摄氏度。今天最低16.8度，最高22.5度，最大降水概率100%。降雨概率较高，建议携带雨具。
-节假日提醒：今天是工作日。后续年度的假期安排尚未收录。
+宁波当前参考气温21.8摄氏度。今天最低16.8度，最高22.0度，最大降水概率100%。降雨概率较高，建议携带雨具。
 接下来是宁波本地资讯。
-立原在现场｜两座城，互为对方“种”了座花园 - 新华网。
-浙江宁波鄞州：“拆改用”并举提升城市风貌 - 中国日报网。
+“小震撼”背后：世界市长在宁波读懂了什么？ - 新蓝网。
+“2026世界市长对话·宁波”共话开放融通与共生机遇 - 新华网浙江。
+宁波又新添一座城市书房 打造0岁—6岁专属阅读空间 - 浙江新闻。
+第二届中国（宁波）智能传感创新创业大赛半决赛举行 - 中国科技网。
+金沅工业园区发展2.32亿元竞得宁波慈溪市1宗商住地 - 观点网。
 “2026世界市长对话·宁波”主活动举行 - 凤凰网。
+世界市长相聚宁波，共答“开放”这道题 - ThePaper.cn。
+世界市长在宁波对话：常来常往 融通共生 - 中国新闻网。
 下面是今天的国内外、科技与财经资讯。
-技术领域，AI 智能体生态成为主线：GitHub 上多个面向并行智能体工作流的工具登榜，OpenAI、DeepMind 分别披露 AI 在工程设计与药物化学中的落地路径，学术界则关注长文档状态追踪与模型权重读写等新方法。财经方面，美国中期选举结果未定令股指期货承压，黄金与原油随中东外交信号波动；Canva 宣布逾千人裁员或转岗，CVS 拟拆分 1170 亿美元医疗版图。时政焦点集中在乌克兰：泽连斯基赴柏林会晤默茨，乌美俄三方会谈定于 11 月 10 日至 11 日在阿布扎比举行；欧洲多地航班遭炸弹威胁，西班牙交通部长因重大铁路事故辞职。
-财经参考汇率方面，截至2026-11-04，一美元约合人民币6.6574元。这不是实时交易报价。
+美国中期选举结果揭晓，民主党赢得两院控制权，引发股市对AI监管收紧的担忧，欧洲股指期货应声下跌。科技领域，AI智能体与模型能力持续进化，从持久化上下文记忆到化学信息学智能体，研究焦点正转向长文档状态追踪与工具环境扩展。财经方面，印度BHEL获阿达尼30亿美元订单，Canva宣布大规模裁员，美国租户财务健康指标亮红灯。地缘政治紧张加剧，霍尔木兹海峡四艘油轮遭水雷摧毁，澳英美核潜艇协议被批史上最危险国防决策。
+财经参考汇率方面，截至2026-11-04，一美元约合人民币6.6605元。这不是实时交易报价。
+接下来是全国焦点。
+2026全球熊猫伙伴大会聚焦中国绿色发展之路_国内要闻 - 中国甘肃网。
+国内要闻 - 秦皇岛新闻。
+国际锐评丨“China+”热词持续迭代中国引力从何而来？-国内新闻 - 水母网。
+乌镇“网事”绘就数字生活新图景_国内要闻 - 中国甘肃网。
+学习贯彻党的二十届五中全会精神丨永葆生机活力 为中国式现代化提供坚强保障 - 胶东在线。
+【乌镇“网事”】习言道｜让互联网更好造福人民 造福世界 - 秦皇岛新闻。
+20项领先科技，透视数智时代创新脉动_国内要闻 - 中国甘肃网。
+乌镇峰会，如何“智”见未来？ - 胶东在线。
+接下来详细关注财经资讯。
+China Boosts Market Defense With National Team, Buybacks。China escalated its defense of the stock market, as state-backed funds answered the government’s rallying call by increasing purchases and more companies stepped up buyback plans.
+India’s BHEL Wins $3 Billion Adani Power Orders, Shares Jump。印度巴拉特重型电气（BHEL）获得阿达尼电力约2800亿卢比（约合30亿美元）的供应设备合同，反映私营部门对新产能投资增加，消息公布后BHEL股价上涨。
+US Stock Index Futures Pare Early Losses Tied to Democrat Sweep。US equity index futures trimmed losses as investors digested the outcome of the midterm elections, with Democrats winning control of both chambers of the US Congress.
+FTSE 100 Live: UK, European Stocks Set to Fall After US Democratic Sweep。在美国中期选举民主党大胜后，英国及欧洲股市预计下跌。该直播博客还关注英镑、英国国债、美国中期选举及PMI等英国市场动向。
+Frozen Turkish Funds’ Blue-Chip Holdings Sold Off-Market。负责土耳其基金清算的银行在场外出售被冻结基金持有的约2.54亿美元蓝筹股，此举可能有助于消除土耳其股指面临的抛压。
+Stocks, Dollar Drop on US Vote; Dip Buyers Emerge: Markets Wrap。A Democratic sweep of both houses of Congress rippled across global markets, sending stocks and the dollar lower while boosting Treasuries on speculation that the result will put the brakes on President Donald Trump’s agenda.
+Korean Stocks Rebound as US Midterm-Driven Losses Seen Excessive。Shares of South Korean chipmakers staged a sharp rebound as investors viewed the earlier selloff driven by a Democratic sweep of the US Congress as overdone.
+Copper Swings as Traders Weigh Midterm Results and Weaker Dollar。Copper swung after US midterm elections that saw a Democratic sweep of Congress, with the dollar easing.
+European Stocks Set to Dip as Democrat Sweep Stokes AI Worries。民主党在美国中期选举中拿下国会两院，引发市场对科技和人工智能行业监管趋严的担忧，欧洲股指期货下跌，欧股料将走低。
+Ex-Temasek Holdings Executive to Lead Motilal Oswal’s Alternates Business。曾共同负责淡马锡印度业务的Padmanabh Sinha将出任Motilal Oswal金融服务公司另类投资业务负责人，公司称此举旨在加强领导团队。
+市场观察。美股技术面呈明显分层：SPY 现价 754.35 跌破 SMA20（768.09）与 SMA50（767.04），近 5 日 -1.99%，RSI14 40.2、MACD 位于信号线下方；QQQ 更弱，近 5 日 -4.99%、RSI14 34.6，距 52 周高点 -10.17%。个股分化显著：GOOGL 空头排列且 RSI 22.2 超卖偏空，META、NVDA、AAPL 近期走弱，仅 MSFT 维持多头排列。加密方面总市值 2.64T 美元、24 小时 -0.77%，BTC 主导率 59.4%、ETH 10.6%，恐慌贪婪指数 34 处恐慌，BTC 78060.82 低于 SMA20、SMA50 且 MACD 绿柱未收敛，ETH 刚现 MACD 金叉但仍在 SMA50 下方，SOL RSI 29.4 超卖。中概股整体偏弱，BABA 空头排列、0700.HK 亦空头排列，但 PDD、JD、腾讯已现 MACD 金叉，JD 近 5 日 +5.24% 属边际修复。商品外汇与宏观：黄金 4030.7 空头排列、MACD 绿柱，WTI 96.32 保有多头排列但触发 MACD 死叉，美元指数 101.55 接近 52 周高且多头排列，VIX 20.83 近 5 日 +18.89% 并出现 MACD 金叉，10Y 收益率 4.95 接近 52 周低点。
 最后是每日科技小知识。CRC校验可以检测许多通信错误，但无法代替超时处理。
 以上内容部分由人工智能整理，新闻与行情请以原始来源为准。感谢收听，祝你今天工作顺利。
