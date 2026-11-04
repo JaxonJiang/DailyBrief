@@ -5,6 +5,8 @@ import calendar
 import html
 import json
 import os
+import subprocess
+import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlencode
@@ -430,6 +432,33 @@ def main():
     script = make_script(
         report, weather, holiday, rate, news, knowledge
     )
+
+    material_file = OUT / "briefing-material.json"
+    narration_file = OUT / "briefing-narration.txt"
+    material_file.write_text(json.dumps({
+        "date": DATE, "weather": weather, "local_news": news,
+        "global_news": report.get("_global_news", []),
+        "national_news": report.get("_national_news", []),
+        "finance": report.get("_finance_articles", []),
+        "overview": report.get("daily_overview"),
+        "market": report.get("trading"), "exchange_rate": rate,
+    }, ensure_ascii=False), encoding="utf-8")
+    try:
+        subprocess.run(
+            ["node", "--import", "tsx", "scripts/morning-narration.ts", str(material_file), str(narration_file)],
+            check=True, timeout=210,
+        )
+        script = narration_file.read_text(encoding="utf-8")
+    except (subprocess.SubprocessError, OSError) as exc:
+        print(f"[morning] Narration rewrite unavailable: {exc}")
+        # Use the report's already edited Chinese briefs rather than raw English feeds.
+        parts = [f"早上好，今天是{DATE}。中文晨报讲解暂时不可用，下面播报已整理的中文摘要。"]
+        for key in ("politics_briefs", "finance_briefs", "tech_briefs"):
+            for item in report.get(key, []):
+                text = str(item.get("title", "")) + "。" + str(item.get("summary", ""))
+                if re.search(r"[\\u4e00-\\u9fff]", text) and not re.search(r"[A-Za-z][A-Za-z\\s]{60,}", text):
+                    parts.append(text)
+        script = "\\n".join(parts)
 
     (OUT / "briefing.txt").write_text(
         script, encoding="utf-8"
