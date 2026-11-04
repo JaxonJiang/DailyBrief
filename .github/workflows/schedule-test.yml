@@ -1,0 +1,18 @@
+name: Scheduled trigger test
+on:
+  schedule:
+    - cron: '27 14 4 11 *'
+      timezone: Asia/Shanghai
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify automatic scheduled trigger
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          test "$EVENT_NAME" = "schedule"
+          echo "Automatic scheduled trigger verified"
+          TZ=Asia/Shanghai date
