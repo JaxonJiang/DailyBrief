@@ -12,7 +12,6 @@ from zoneinfo import ZoneInfo
 
 import requests
 import feedparser
-import chinese_calendar as cncal
 import edge_tts
 
 
@@ -89,51 +88,6 @@ def get_weather():
     }
 
 
-def holiday_name(value):
-    if value is None:
-        return ""
-    return str(getattr(value, "value", value))
-
-
-def get_holiday():
-    # 以已公布并被 chinese_calendar 收录的日期为准
-    if cncal.is_workday(TODAY):
-        status = (
-            "今天是调休工作日"
-            if TODAY.weekday() >= 5
-            else "今天是工作日"
-        )
-    else:
-        named, name = cncal.get_holiday_detail(TODAY)
-        if named and name:
-            status = f"今天是假期：{holiday_name(name)}"
-        elif TODAY.weekday() < 5:
-            status = "今天是调休放假日"
-        else:
-            status = "今天是休息日"
-
-    upcoming = "暂未找到已收录的近期法定节假日"
-    for offset in range(1, 100):
-        date = TODAY + timedelta(days=offset)
-        try:
-            named, name = cncal.get_holiday_detail(date)
-        except (NotImplementedError, ValueError):
-            upcoming = "后续年度的假期安排尚未收录"
-            break
-
-        if named and name:
-            upcoming = (
-                f"下一个已收录节日：{holiday_name(name)}，"
-                f"{date.isoformat()}，还有{offset}天"
-            )
-            break
-
-    return {
-        "status": status,
-        "upcoming": upcoming,
-    }
-
-
 def get_exchange_rate():
     url = "https://api.frankfurter.dev/v2/rate/USD/CNY"
     response = requests.get(url, timeout=20)
@@ -147,11 +101,11 @@ def get_exchange_rate():
     }
 
 
-def get_ningbo_news():
+def get_ningbo_news(query="宁波", limit=8):
     rss_url = (
         "https://news.google.com/rss/search?"
         + urlencode({
-            "q": "宁波",
+            "q": query + " when:2d",
             "hl": "zh-CN",
             "gl": "CN",
             "ceid": "CN:zh-Hans",
@@ -199,7 +153,7 @@ def get_ningbo_news():
             "url": link,
             "published": published.isoformat(),
         })
-        if len(result) >= 5:
+        if len(result) >= limit:
             break
 
     return result
@@ -228,7 +182,7 @@ def make_script(report, weather, holiday, rate, news, knowledge):
 
     if news:
         parts.append("接下来是宁波本地资讯。")
-        for item in news[:3]:
+        for item in news:
             parts.append(item["title"] + "。")
     else:
         parts.append("宁波本地资讯暂时没有可核实的新消息。")
@@ -236,7 +190,7 @@ def make_script(report, weather, holiday, rate, news, knowledge):
     overview = str(report.get("daily_overview") or "")
     if overview:
         parts.append("下面是今天的国内外、科技与财经资讯。")
-        parts.append(overview[:750])
+        parts.append(overview)
 
     if rate:
         parts.append(
@@ -245,6 +199,16 @@ def make_script(report, weather, holiday, rate, news, knowledge):
             "这不是实时交易报价。"
         )
 
+    if report.get("_national_news"):
+        parts.append("接下来是全国焦点。")
+        parts.extend(item["title"] + "。" for item in report["_national_news"])
+    if report.get("_finance_articles"):
+        parts.append("接下来详细关注财经资讯。")
+        for item in report["_finance_articles"]:
+            parts.append(str(item.get("title", "")) + "。" + str(item.get("summary") or item.get("excerpt") or ""))
+    market = report.get("trading") or {}
+    if market.get("market_overview"):
+        parts.append("市场观察。" + str(market["market_overview"]))
     parts.append("最后是每日科技小知识。" + knowledge)
     parts.append(
         "以上内容部分由人工智能整理，"
@@ -257,8 +221,8 @@ def make_script(report, weather, holiday, rate, news, knowledge):
 async def save_mp3(text, destination):
     speech = edge_tts.Communicate(
         text,
-        voice="zh-CN-XiaoxiaoNeural",
-        rate="+0%",
+        voice=os.getenv("MORNING_VOICE", "zh-CN-YunxiNeural"),
+        rate=os.getenv("MORNING_RATE", "-5%"),
     )
     await speech.save(str(destination))
 
@@ -303,10 +267,16 @@ def make_panel(weather, holiday, rate, news, knowledge, report, audio_ok):
     market = report.get("trading") or {}
     market_text = str(market.get("market_overview") or "")
     market_html = (
-        f"<p>{esc(market_text[:250])}……</p>"
+        f"<p>{esc(market_text)}……</p>"
         if market_text else "<p>请查看原有的财经与市场行情栏目。</p>"
     )
 
+    national_html = "<ol>" + "".join(
+        f'<li><a href="{esc(item["url"])}" target="_blank" rel="noopener noreferrer">{esc(item["title"])}</a></li>'
+        for item in report.get("_national_news", [])
+    ) + "</ol>"
+    if not report.get("_national_news"):
+        national_html = "<p>全国热点暂不可用，请查看下方资讯。</p>"
     owner, repo = os.getenv(
         "GITHUB_REPOSITORY", "JaxonJiang/DailyBrief"
     ).split("/", 1)
@@ -326,7 +296,7 @@ def make_panel(weather, holiday, rate, news, knowledge, report, audio_ok):
 
     return f"""
 <section id="morning-v2" class="morning-v2">
-  <h2>☀️ 宁波 AI 晨间播报 · {esc(DATE)}</h2>
+  <p class="morning-eyebrow">DAILY BRIEF · MORNING EDITION</p><h2>早安，宁波</h2><p>{esc(DATE)} · 全国焦点 / 城市动态 / 财经观察</p>
   <div class="morning-grid">
     <article class="morning-card">
       <h3>🌤️ 宁波天气</h3>
@@ -334,12 +304,9 @@ def make_panel(weather, holiday, rate, news, knowledge, report, audio_ok):
       {weather_html}
       <small>来源：Open-Meteo 模型天气数据</small>
     </article>
+
     <article class="morning-card">
-      <h3>📅 节假日与调休</h3>
-      {holiday_html}
-    </article>
-    <article class="morning-card">
-      <h3>🏙️ 宁波本地热点</h3>
+      <h3>全国焦点</h3>{national_html}<h3>宁波本地热点</h3>
       {news_html}
       <small>新闻搜索聚合，点击原文核对。</small>
     </article>
@@ -365,6 +332,14 @@ def make_panel(weather, holiday, rate, news, knowledge, report, audio_ok):
 
 CSS = """
 <style>
+.morning-v2 { background:linear-gradient(135deg,#f4f1e8,#e4eee9); color:#18352e; box-shadow:0 12px 40px #12352a12; }
+.morning-v2 a { color:#176c59; text-decoration:none; }
+.morning-v2 a:hover { text-decoration:underline; }
+.morning-v2 .morning-eyebrow { font-size:.7rem; letter-spacing:.2em; color:#59776a; }
+.morning-v2 h2 { font-family:Georgia,serif; font-size:2.5rem !important; }
+.morning-v2 .morning-card { background:#ffffffb8; border-color:#18352e18; }
+.morning-card li { padding:8px 0; border-bottom:1px solid #18352e12; }
+
 .morning-v2 {
   margin: 1.5rem 0;
   padding: 1.1rem;
@@ -417,9 +392,17 @@ def main():
     report = json.loads(report_file.read_text(encoding="utf-8"))
 
     weather = safe("weather", get_weather)
-    holiday = safe("holiday", get_holiday)
+    holiday = None
     rate = safe("exchange rate", get_exchange_rate)
     news = safe("Ningbo news", get_ningbo_news) or []
+
+    national = safe("national news", lambda: get_ningbo_news("中国 国内 要闻", 8)) or []
+    report["_national_news"] = national
+    article_file = OUT / f"{DATE}-articles.json"
+    articles = json.loads(article_file.read_text(encoding="utf-8")) if article_file.exists() else []
+    if isinstance(articles, dict):
+        articles = articles.get("articles", [])
+    report["_finance_articles"] = [item for item in articles if item.get("category") == "finance"][:10]
 
     knowledge = KNOWLEDGE[TODAY.toordinal() % len(KNOWLEDGE)]
 
